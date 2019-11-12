@@ -23,11 +23,15 @@ class Snake:
         '''Returns a list of tuples containing the x and y position of each snake segment'''
         return self.__segments
 
+    def get_velocity(self):
+        '''Returns a tuple containing the snake's x and y velocity'''
+        return self.__x_velocity, self.__y_velocity
+
     def found_food(self, food_position):
         '''Returns True if the snake has found food, returns False otherwise'''
         found_food = food_position == self.__segments[0]
         if found_food:
-            self.__segments.append((0, 0))
+            self.__segments.append((-100, -100))
 
         return found_food
 

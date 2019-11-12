@@ -1,5 +1,5 @@
 import random
-from settings import CELL_SIZE, GRID_WIDTH, GRID_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT
+from settings import CELL_SIZE, GRID_WIDTH, GRID_HEIGHT
 
 class Food:
     def __init__(self):
@@ -13,8 +13,11 @@ class Food:
 
     def __calculate_random_position(self):
         '''Returns a tuple containing a new random x and y position'''
-        return random.randint(0, GRID_WIDTH) * CELL_SIZE, random.randint(0, GRID_HEIGHT) * CELL_SIZE
+        return random.randint(0, GRID_WIDTH-1) * CELL_SIZE, random.randint(0, GRID_HEIGHT-1) * CELL_SIZE
 
-    def respawn(self):
-        '''Respawns the food at a random position'''
-        self.__x, self.__y = self.__calculate_random_position()
+    def respawn(self, snake_segments=[]):
+        '''Respawns the food at a random position where there is no snake to be found'''
+        random_position = self.__calculate_random_position()
+        while random_position in snake_segments:
+            random_position = self.__calculate_random_position()
+        self.__x, self.__y = random_position
