@@ -10,6 +10,7 @@ SCREEN_WIDTH = 640
 SCREEN_HEIGHT = 640
 
 #Grid
-CELL_SIZE = (16, 16)
-GRID_WIDTH = SCREEN_WIDTH // CELL_SIZE[0]   #number of cells in width
-GRID_HEIGHT = SCREEN_HEIGHT // CELL_SIZE[1] #number of cells in height
+CELL_SIZE = 16
+CELL_DIMENSIONS = (CELL_SIZE, CELL_SIZE)
+GRID_WIDTH = SCREEN_WIDTH // CELL_SIZE   #number of cells in width
+GRID_HEIGHT = SCREEN_HEIGHT // CELL_SIZE #number of cells in height
