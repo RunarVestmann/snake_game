@@ -8,3 +8,5 @@ _**Controls:**_
   Spacebar resets the game.
 
   Escape exits the game.
+
+![Screenshot](images/Screenshot.PNG)
