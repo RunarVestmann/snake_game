@@ -15,8 +15,7 @@ FONT_DATA = pygame.font.SysFont(FONT, FONT_SIZE)
 pygame.display.set_caption("Snake")
 pygame.display.set_icon(pygame.image.load("../images/SnakeIcon.png"))
 
-def handle_user_input(constant_objects_dict):
-    snake = constant_objects_dict["Snake"]
+def handle_user_input(snake, game_states_dict):
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT or event.key == pygame.K_a:
@@ -32,7 +31,7 @@ def handle_user_input(constant_objects_dict):
                 quit_game()
 
             if event.key == pygame.K_SPACE:
-                reset_game(constant_objects_dict)
+                game_states_dict["Reset"] = True
 
         if event.type == pygame.QUIT:
             quit_game()
@@ -40,11 +39,6 @@ def handle_user_input(constant_objects_dict):
 def quit_game():
     pygame.quit()
     quit()
-
-def reset_game(constant_objects_dict):
-    constant_objects_dict["GAME_OVER"] = False
-    constant_objects_dict["Food"] = Food()
-    constant_objects_dict["Snake"] = Snake(160, 160)
 
 def draw_objects(food, snake):
     SCREEN.fill(BACKGROUND_COLOR)
@@ -58,21 +52,24 @@ def draw_objects(food, snake):
 
 def game_loop():
 
-    #Dictionary with values containing the food, snake and whether the game is over or not
-    constant_objects_dict = dict()
-    reset_game(constant_objects_dict)
+    food = Food()
+    snake = Snake(160, 160)
+
+    game_states_dict = {"Game_Over":False, "Reset":False}
     final_score = None
 
     while True:
 
-        #Fetch from the dictionary all the objects we need
-        game_over = constant_objects_dict["GAME_OVER"]
-        food = constant_objects_dict["Food"]
-        snake = constant_objects_dict["Snake"]
+        handle_user_input(snake, game_states_dict)
 
-        handle_user_input(constant_objects_dict)
+        #If the user pressed spacebar we reset the game
+        if game_states_dict["Reset"]:
+            snake = Snake(160, 160)
+            food.respawn(snake.get_segments())
+            game_states_dict["Game_Over"] = False
+            game_states_dict["Reset"] = False
 
-        if not game_over:
+        if not game_states_dict["Game_Over"]:
             snake.update_position()
             draw_objects(food, snake)
         else:
@@ -83,7 +80,7 @@ def game_loop():
         pygame.time.wait(TIME_BETWEEN_FRAMES)
 
         if snake.crashed_into_self() or snake.crashed_into_wall():
-            constant_objects_dict["GAME_OVER"] = True
+            game_states_dict["Game_Over"] = True
             final_score = FONT_DATA.render(END_GAME_TEXT + str(len(snake)), False, END_GAME_TEXT_COLOR)
 
         elif snake.found_food(food.get_position()):
