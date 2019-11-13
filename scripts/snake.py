@@ -29,9 +29,9 @@ class Snake:
 
     def found_food(self, food_position):
         '''Returns True if the snake has found food, returns False otherwise'''
-        found_food = food_position == self.__segments[0]
+        found_food = self.__segments[0] == food_position
         if found_food:
-            self.__segments.append((-100, -100))
+            self.__segments.append((-160, -160))
 
         return found_food
 

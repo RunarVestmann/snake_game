@@ -15,8 +15,8 @@ class Food:
         '''Returns a tuple containing a new random x and y position'''
         return random.randint(0, GRID_WIDTH-1) * CELL_SIZE, random.randint(0, GRID_HEIGHT-1) * CELL_SIZE
 
-    def respawn(self, snake_segments=[]):
-        '''Respawns the food at a random position where there is no snake to be found'''
+    def respawn(self, snake_segments):
+        '''Respawns the food at a random position that's not on top of the snake'''
         random_position = self.__calculate_random_position()
         while random_position in snake_segments:
             random_position = self.__calculate_random_position()
