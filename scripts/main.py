@@ -16,16 +16,17 @@ pygame.display.set_caption("Snake")
 pygame.display.set_icon(pygame.image.load("../images/SnakeIcon.png"))
 
 def handle_user_input(constant_objects_dict):
+    snake = constant_objects_dict["Snake"]
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT or event.key == pygame.K_a:
-                constant_objects_dict["Snake"].update_velocity(-CELL_SIZE, 0)
+                snake.update_velocity(-CELL_SIZE, 0)
             if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
-                constant_objects_dict["Snake"].update_velocity(CELL_SIZE, 0)
+                snake.update_velocity(CELL_SIZE, 0)
             if event.key == pygame.K_DOWN or event.key == pygame.K_s:
-                constant_objects_dict["Snake"].update_velocity(0, CELL_SIZE)
+                snake.update_velocity(0, CELL_SIZE)
             if event.key == pygame.K_UP or event.key == pygame.K_w:
-                constant_objects_dict["Snake"].update_velocity(0, -CELL_SIZE)
+                snake.update_velocity(0, -CELL_SIZE)
 
             if event.key == pygame.K_ESCAPE:
                 quit_game()
