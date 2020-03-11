@@ -15,7 +15,7 @@ FONT_DATA = pygame.font.SysFont(FONT, FONT_SIZE)
 pygame.display.set_caption("Snake")
 pygame.display.set_icon(pygame.image.load("../images/SnakeIcon.png"))
 
-def handle_user_input(snake, game_states_dict):
+def handle_user_input(snake):
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT or event.key == pygame.K_a:
@@ -31,14 +31,14 @@ def handle_user_input(snake, game_states_dict):
                 quit_game()
 
             if event.key == pygame.K_SPACE:
-                game_states_dict["Reset"] = True
+                return True
 
         if event.type == pygame.QUIT:
             quit_game()
 
 def quit_game():
     pygame.quit()
-    quit()
+    raise SystemExit
 
 def draw_objects(food, snake):
     SCREEN.fill(BACKGROUND_COLOR)
@@ -55,24 +55,25 @@ def game_loop():
     food = Food()
     snake = Snake(160, 160)
 
-    game_states_dict = {"Game_Over":False, "Reset":False}
+    game_over = False
     final_score = None
 
     while True:
 
-        handle_user_input(snake, game_states_dict)
+        reset_input = handle_user_input(snake)
 
         #If the user pressed spacebar we reset the game
-        if game_states_dict["Reset"]:
+        if reset_input:
             snake = Snake(160, 160)
             food.respawn(snake.get_segments())
-            game_states_dict["Game_Over"] = False
-            game_states_dict["Reset"] = False
+            game_over = False
 
-        if not game_states_dict["Game_Over"]:
+        if not game_over:
+            #Keep refreshing the screen while the game is not over
             snake.update_position()
             draw_objects(food, snake)
         else:
+            #Show the final score on the screen
             SCREEN.blit(final_score, END_GAME_TEXT_POSITION)
 
         pygame.display.update()
@@ -80,7 +81,8 @@ def game_loop():
         pygame.time.wait(TIME_BETWEEN_FRAMES)
 
         if snake.crashed_into_self() or snake.crashed_into_wall():
-            game_states_dict["Game_Over"] = True
+            #End the game and prepare to render the final score
+            game_over = True
             final_score = FONT_DATA.render(END_GAME_TEXT + str(len(snake)), False, END_GAME_TEXT_COLOR)
 
         elif snake.found_food(food.get_position()):
